@@ -48,16 +48,5 @@ function handleAuthClick(event) {
  * Load Google Tasks API client library.
  */
 function loadTasksApi() {
-    $.ajax({
-        type   : 'GET',
-        url    : 'https://content.googleapis.com/tasks/v1/lists/MDI0ODg5OTc4NTQwMzA4ODU3OTI6MDow/tasks',
-        headers: {
-            'authorization': 'Bearer ' + ACCESS_TOKEN
-        }
-    }).done(function (data) {
-        //render();
-        renderTaskList();
-    }).fail(function () {
-        console.error('Error connecting to server');
-    })
+    renderTaskList();
 }
