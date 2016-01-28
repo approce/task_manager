@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task manager</title>
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.css">
+
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/lib/underscore/underscore-min.js"></script>
+
+    <script type="text/javascript" src="/lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="/lib/backbone/backbone-min.js"></script>
+    <script type="text/javascript" src="/lib/marionette/backbone.marionette.min.js"></script>
+
+    <script src="https://apis.google.com/js/client.js"></script>
+</head>
+<style>
+    #container {
+        margin-top: 40px;
+    }
+
+    #authorize-div {
+        text-align: center;
+    }
+</style>
+<body>
+
+<div id="container" class="col-md-4 col-md-offset-4">
+    <div id="authorize-div">
+        <button id="authorize-button" class="btn btn-primary" onclick="handleAuthClick(event)">
+            Authorize
+        </button>
+    </div>
+</div>
+
+
+<script id="wrap" type="text/html">
+    <ul class="list-group wrap">
+
+    </ul>
+
+    <div class="input-group">
+        <input type="text" class="form-control" aria-label="...">
+
+        <div class="input-group-btn">
+            <button class="btn btn-success">Add</button>
+        </div>
+    </div>
+</script>
+
+
+</body>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/auth.js"></script>
+</html>
