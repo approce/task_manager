@@ -23,6 +23,10 @@
     #authorize-div {
         text-align: center;
     }
+
+    .list-group-item {
+        height: 40px;
+    }
 </style>
 <body>
 
@@ -35,13 +39,13 @@
 </div>
 
 
-<script id="wrap" type="text/html">
+<script id="list-template" type="text/html">
     <ul class="list-group wrap">
-
+        <h1><%= title %></h1>
     </ul>
 
     <div class="input-group">
-        <input type="text" class="form-control" aria-label="...">
+        <input type="text" class="form-control">
 
         <div class="input-group-btn">
             <button class="btn btn-success">Add</button>
@@ -49,9 +53,15 @@
     </div>
 </script>
 
+<script id="item-template" type="text/html">
+    <%= title %>
+    <a class='label label-danger pull-right'>X</a>
+</script>
+
 
 </body>
 
+<script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/auth.js"></script>
 </html>

@@ -1,101 +1,102 @@
-var TaskListModel      = Backbone.Model.extend({
-    urlRoot : 'https://content.googleapis.com/tasks/v1/users/@me/lists',
+var LISTS_URL      = 'https://content.googleapis.com/tasks/v1/users/@me/lists';
+var LIST_TASKS_URL = 'https://content.googleapis.com/tasks/v1/lists/{0}/tasks/';
+
+var ListModel = Backbone.Model.extend({
+    urlRoot : LISTS_URL,
     defaults: {
         id   : null,
-        title: 'empty title'
+        title: ''
     }
 });
-var TaskListCollection = Backbone.Model.extend({
-    url  : 'https://content.googleapis.com/tasks/v1/users/@me/lists',
-    model: TaskListModel,
+
+var ListCollection = Backbone.Collection.extend({
+    url  : LISTS_URL,
+    model: ListModel,
     parse: function (data) {
         return data.items;
     }
 });
 
-var renderTaskList = function () {
-    var taskListCollection = new TaskListCollection();
+var ItemView = Backbone.Marionette.ItemView.extend({
+    tagName   : 'a',
+    className : 'list-group-item',
+    attributes: function () {
+        return {
+            href: '#'
+        }
+    },
+    template  : '#item-template',
+    ui        : {
+        removeBtn: 'a'
+    },
+    events    : {
+        'click @ui.removeBtn': function () {
+            this.model.destroy();
+        }
+    }
+});
 
-    taskListCollection.fetch({
-        success: function (data) {
-            render(data.attributes[0].id);
+var CompositeView = Backbone.Marionette.CompositeView.extend({
+    el                : '#container',
+    template          : '#list-template',
+    childView         : ItemView,
+    childViewContainer: '.wrap',
+    ui                : {
+        input : 'input',
+        create: 'button'
+    },
+    events            : {
+        'click @ui.create': function () {
+            var input = this.ui.input.val();
+            var Model = this.model.get('childClass');
+            var model = new Model({title: input});
+            model.save();
+            this.collection.add(model);
+        }
+    }
+});
+
+var renderTaskList = function () {
+    var taskListCollection = new ListCollection();
+    taskListCollection.fetch();
+
+    var itemView = ItemView.extend({
+        events: {
+            'click': function (e) {
+                render(this.model.get('id'));
+            }
         }
     });
+
+    var compositeView = new CompositeView({
+        collection: taskListCollection,
+        childView : itemView,
+        model     : new Backbone.Model({title: 'Task lists:', childClass: ListModel})
+    });
+    compositeView.render();
 };
 
 var render = function (listId) {
+    var url = LIST_TASKS_URL.format(listId);
 
-    var TaskModel      = Backbone.Model.extend({
-        urlRoot : 'https://content.googleapis.com/tasks/v1/lists/' + listId + '/tasks/',
-        defaults: {
-            id   : null,
-            title: 'empty title'
-        }
-    });
-    var TaskCollection = Backbone.Collection.extend({
-        url  : 'https://content.googleapis.com/tasks/v1/lists/' + listId + '/tasks',
-        model: TaskModel,
-        parse: function (data) {
-            return data.items;
-        }
+    var TaskModel = ListModel.extend({
+        urlRoot: url
     });
 
-    var taskListCollection = new TaskListCollection();
-    taskListCollection.fetch();
+    var TaskCollection = ListCollection.extend({
+        url  : url,
+        model: TaskModel
+    });
 
     var collection = new TaskCollection();
     collection.fetch();
 
-    var TaskList = Backbone.Marionette.ItemView.extend({
-        tagName  : 'a',
-        className: 'list-group-item',
-        template : _.template("Task: <%= title %>" +
-                              "<a class='label label-danger pull-right'>X</a>"),
-        ui       : {
-            removeBtn: 'a'
-        },
-        events   : {
-            'click @ui.removeBtn': function () {
-                this.model.destroy();
-            }
-        }
+    var TaskCompositeView = CompositeView.extend({});
+
+    var compositeView = new TaskCompositeView({
+        collection: collection,
+        model     : new Backbone.Model({title: 'Tasks:', childClass: TaskModel})
     });
 
-    var View = Backbone.Marionette.ItemView.extend({
-        tagName  : 'a',
-        className: 'list-group-item',
-        template : _.template("Task: <%= title %>" +
-                              "<a class='label label-danger pull-right'>X</a>"),
-        ui       : {
-            removeBtn: 'a'
-        },
-        events   : {
-            'click @ui.removeBtn': function () {
-                this.model.destroy();
-            }
-        }
-    });
-
-    var CompositeView = Backbone.Marionette.CompositeView.extend({
-        template          : '#wrap',
-        childView         : View,
-        childViewContainer: '.wrap',
-
-        ui    : {
-            input : 'input',
-            create: 'button'
-        },
-        events: {
-            'click @ui.create': function () {
-                var input = this.ui.input.val();
-                var task  = new TaskModel({title: input});
-                task.save();
-                this.collection.add(task);
-            }
-        }
-    });
-
-    var view = new CompositeView({el: '#container', collection: collection});
-
-    view.render();
+    compositeView.render();
 };
