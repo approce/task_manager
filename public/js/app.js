@@ -1,0 +1,37 @@
+//Attention: google do not permits to remove very first task list & first task in any list.
+
+var initApp = function () {
+    var myApp;
+    var Router = Backbone.Router.extend({
+        routes: {
+            ""         : "lists",
+            "tasks/:id": "tasks"
+        },
+        lists : function () {
+            myApp.layout.content.show(getListsView());
+        },
+        tasks : function (id) {
+            myApp.layout.content.show(getTasksView(id));
+        }
+    });
+
+    var AppLayout = Marionette.LayoutView.extend({
+        template: "#layout-template",
+        regions : {
+            content: "#content"
+        }
+    });
+
+    var MyApp = Marionette.Application.extend({
+        onStart   : function () {
+            this.router = new Router();
+            Backbone.history.start();
+        },
+        initialize: function () {
+            this.layout = new AppLayout({el: '#main'});
+            this.layout.render();
+        }
+    });
+    myApp     = new MyApp();
+    myApp.start();
+};

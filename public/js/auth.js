@@ -22,7 +22,7 @@ function handleAuthResult(authResult) {
         gapi.auth.setToken(token);
         // Hide auth UI, then load client library.
         authorizeDiv.style.display = 'none';
-        initializeView();
+        initApp();
     } else {
         // Show auth UI, allowing the user to initiate authorization by
         // clicking authorize button.
@@ -40,11 +40,4 @@ function handleAuthClick(event) {
         {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
         handleAuthResult);
     return false;
-}
-
-/**
- * init marionette routes & view:
- */
-function initializeView() {
-    initWorkspace();
 }

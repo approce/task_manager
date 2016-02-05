@@ -1,7 +1,7 @@
 var LISTS_URL      = 'https://content.googleapis.com/tasks/v1/users/@me/lists';
 var LIST_TASKS_URL = 'https://content.googleapis.com/tasks/v1/lists/{0}/tasks/';
 
-var ListModel = Backbone.Model.extend({
+var CommonModel = Backbone.Model.extend({
     urlRoot : LISTS_URL,
     defaults: {
         id   : null,
@@ -11,7 +11,7 @@ var ListModel = Backbone.Model.extend({
 
 var ListCollection = Backbone.Collection.extend({
     url  : LISTS_URL,
-    model: ListModel,
+    model: CommonModel,
     parse: function (data) {
         return data.items;
     }
@@ -33,7 +33,6 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 });
 
 var CompositeView = Backbone.Marionette.CompositeView.extend({
-    el                : '#container',
     template          : '#list-template',
     childView         : ItemView,
     childViewContainer: '.wrap',
@@ -46,40 +45,23 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
             var input = this.ui.input.val();
             var Model = this.model.get('childClass');
             var model = new Model({title: input});
-            model.save();
-            this.collection.add(model);
+            model.save(model.attributes, {
+                success: function () {
+                    this.collection.add(model);
+                }.bind(this)
+            });
+
             this.ui.input.val('');
         },
         'keyup'           : function (e) {
             if (e.which == 13) {
-                console.log('here');
                 this.ui.create.click();
             }
         }
     }
 });
 
-var initWorkspace  = function () {
-    renderTaskList();
-    var Workspace = Backbone.Router.extend({
-        routes: {
-            ""         : "lists",
-            "tasks/:id": "tasks"
-        }
-    });
-
-    var workspace = new Workspace;
-
-    Backbone.history.start();
-
-    workspace.on('route:lists', function () {
-        renderTaskList();
-    });
-    workspace.on('route:tasks', function (id) {
-        render(id);
-    });
-};
-var renderTaskList = function () {
+var getListsView = function () {
     var taskListCollection = new ListCollection();
     taskListCollection.fetch();
 
@@ -100,20 +82,17 @@ var renderTaskList = function () {
         }
     });
 
-    var compositeView = new CompositeView({
+    return new CompositeView({
         collection: taskListCollection,
         childView : itemView,
-        model     : new Backbone.Model({title: 'Task lists:', childClass: ListModel})
+        model     : new Backbone.Model({title: 'Task lists:', childClass: CommonModel})
     });
-    compositeView.render();
-
-    return compositeView;
 };
 
-var render = function (listId) {
+var getTasksView = function (listId) {
     var url = LIST_TASKS_URL.format(listId);
 
-    var TaskModel = ListModel.extend({
+    var TaskModel = CommonModel.extend({
         urlRoot: url
     });
 
@@ -127,11 +106,8 @@ var render = function (listId) {
 
     var TaskCompositeView = CompositeView.extend({});
 
-    var compositeView = new TaskCompositeView({
+    return new TaskCompositeView({
         collection: collection,
         model     : new Backbone.Model({title: 'Tasks:', childClass: TaskModel})
     });
-
-    compositeView.render();
-    return compositeView;
 };
