@@ -48,9 +48,10 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
             model.save(model.attributes, {
                 success: function () {
                     this.collection.add(model);
+                    this.ui.create.button('reset');
                 }.bind(this)
             });
-
+            this.ui.create.button('loading');
             this.ui.input.val('');
         },
         'keyup'           : function (e) {

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Task manager</title>
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="/stylesheets/style.css">
 
     <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/lib/underscore/underscore-min.js"></script>
@@ -42,7 +41,7 @@
         </button>
     </div>
 </div>
-
+</body>
 
 <script id="list-template" type="text/html">
     <ul class="list-group wrap">
@@ -53,7 +52,7 @@
         <input type="text" class="form-control">
 
         <div class="input-group-btn">
-            <button id="create" class="btn btn-success">Add</button>
+            <button id="create" class="btn btn-success" data-loading-text="Saving...">Add</button>
         </div>
     </div>
 </script>
