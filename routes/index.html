@@ -13,7 +13,7 @@
     <script type="text/javascript" src="/lib/backbone/backbone-min.js"></script>
     <script type="text/javascript" src="/lib/marionette/backbone.marionette.min.js"></script>
 
-    <script src="https://apis.google.com/js/client.js"></script>
+    <script src="/lib/client.js"></script>
 </head>
 <style>
     #container {
@@ -48,14 +48,18 @@
         <input type="text" class="form-control">
 
         <div class="input-group-btn">
-            <button class="btn btn-success">Add</button>
+            <button id="create" class="btn btn-success">Add</button>
         </div>
     </div>
 </script>
 
 <script id="item-template" type="text/html">
     <%= title %>
-    <a class='label label-danger pull-right'>X</a>
+    <span class="pull-right">
+        <button class="btn btn-xs btn-warning remove">
+            <span class="glyphicon glyphicon-trash"></span>
+        </button>
+      </span>
 </script>
 
 

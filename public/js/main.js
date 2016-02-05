@@ -27,10 +27,13 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
     template  : '#item-template',
     ui        : {
-        removeBtn: 'a'
+        removeBtn: '.remove'
     },
     events    : {
-        'click @ui.removeBtn': function () {
+        'click @ui.removeBtn': function (e) {
+            console.log(e);
+            e.preventDefault();
+            console.log('123');
             this.model.destroy();
         }
     }
@@ -43,7 +46,7 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
     childViewContainer: '.wrap',
     ui                : {
         input : 'input',
-        create: 'button'
+        create: '#create'
     },
     events            : {
         'click @ui.create': function () {
@@ -52,17 +55,57 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
             var model = new Model({title: input});
             model.save();
             this.collection.add(model);
+            this.ui.input.val('');
+        },
+        'keyup'           : function (e) {
+            if (e.which == 13) {
+                console.log('here');
+                this.ui.create.click();
+            }
         }
     }
 });
 
+var initWorkspace  = function () {
+    Backbone.history.start();
+
+    renderTaskList();
+
+    var Workspace = Backbone.Router.extend({
+        routes: {
+            ""         : "lists",
+            "tasks/:id": "tasks"
+        }
+    });
+
+    var workspace = new Workspace;
+    workspace.on('route:lists', function (action) {
+        renderTaskList();
+    });
+    workspace.on('route:tasks', function (id) {
+        render(id);
+    });
+};
 var renderTaskList = function () {
     var taskListCollection = new ListCollection();
     taskListCollection.fetch();
 
     var itemView = ItemView.extend({
-        events: {
-            'click': function (e) {
+        attributes: function () {
+            return {
+                href: '#tasks/' + this.model.get('id')
+            };
+        },
+        ui        : {
+            row      : '.task_list_row',
+            removeBtn: '.remove'
+        },
+        events    : {
+            'click @ui.removeBtn': function (e) {
+                e.preventDefault();
+                this.model.destroy();
+            },
+            'click @ui.row'      : function (e) {
                 render(this.model.get('id'));
             }
         }

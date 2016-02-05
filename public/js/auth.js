@@ -2,8 +2,6 @@ var CLIENT_ID = '433275033379-h1vbmg66vsrno3k6mp2pkcra9aju7m61.apps.googleuserco
 
 var SCOPES = ['https://www.googleapis.com/auth/tasks'];
 
-var TASK_LIST = 'MDI0ODg5OTc4NTQwMzA4ODU3OTI6MDow';
-
 var ACCESS_TOKEN;
 
 function saveToke(access_token) {
@@ -48,5 +46,5 @@ function handleAuthClick(event) {
  * Load Google Tasks API client library.
  */
 function loadTasksApi() {
-    renderTaskList();
+    initWorkspace();
 }
