@@ -22,7 +22,7 @@ function handleAuthResult(authResult) {
         gapi.auth.setToken(token);
         // Hide auth UI, then load client library.
         authorizeDiv.style.display = 'none';
-        loadTasksApi();
+        initializeView();
     } else {
         // Show auth UI, allowing the user to initiate authorization by
         // clicking authorize button.
@@ -43,8 +43,8 @@ function handleAuthClick(event) {
 }
 
 /**
- * Load Google Tasks API client library.
+ * init marionette routes & view:
  */
-function loadTasksApi() {
+function initializeView() {
     initWorkspace();
 }

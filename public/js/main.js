@@ -18,22 +18,15 @@ var ListCollection = Backbone.Collection.extend({
 });
 
 var ItemView = Backbone.Marionette.ItemView.extend({
-    tagName   : 'a',
-    className : 'list-group-item',
-    attributes: function () {
-        return {
-            href: '#'
-        }
-    },
-    template  : '#item-template',
-    ui        : {
+    tagName  : 'a',
+    className: 'list-group-item',
+    template : '#item-template',
+    ui       : {
         removeBtn: '.remove'
     },
-    events    : {
+    events   : {
         'click @ui.removeBtn': function (e) {
-            console.log(e);
             e.preventDefault();
-            console.log('123');
             this.model.destroy();
         }
     }
@@ -67,10 +60,7 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
 });
 
 var initWorkspace  = function () {
-    Backbone.history.start();
-
     renderTaskList();
-
     var Workspace = Backbone.Router.extend({
         routes: {
             ""         : "lists",
@@ -79,7 +69,10 @@ var initWorkspace  = function () {
     });
 
     var workspace = new Workspace;
-    workspace.on('route:lists', function (action) {
+
+    Backbone.history.start();
+
+    workspace.on('route:lists', function () {
         renderTaskList();
     });
     workspace.on('route:tasks', function (id) {
@@ -97,16 +90,12 @@ var renderTaskList = function () {
             };
         },
         ui        : {
-            row      : '.task_list_row',
             removeBtn: '.remove'
         },
         events    : {
             'click @ui.removeBtn': function (e) {
                 e.preventDefault();
                 this.model.destroy();
-            },
-            'click @ui.row'      : function (e) {
-                render(this.model.get('id'));
             }
         }
     });
@@ -117,6 +106,8 @@ var renderTaskList = function () {
         model     : new Backbone.Model({title: 'Task lists:', childClass: ListModel})
     });
     compositeView.render();
+
+    return compositeView;
 };
 
 var render = function (listId) {
@@ -142,4 +133,5 @@ var render = function (listId) {
     });
 
     compositeView.render();
+    return compositeView;
 };
