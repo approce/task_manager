@@ -1,6 +1,4 @@
-//Attention: google do not permits to remove very first task list & first task in any list.
-
-var initApp = function () {
+(function () {
     var myApp;
     var Router = Backbone.Router.extend({
         routes: {
@@ -34,4 +32,4 @@ var initApp = function () {
     });
     myApp     = new MyApp();
     myApp.start();
-};
+})();
