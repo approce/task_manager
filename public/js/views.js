@@ -64,7 +64,8 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
 
 var getListsView = function () {
     var taskListCollection = new ListCollection();
-    taskListCollection.fetch();
+    //Do not fetch data on view creating:
+    //taskListCollection.fetch();
 
     var itemView = ItemView.extend({
         attributes: function () {
@@ -103,7 +104,8 @@ var getTasksView = function (listId) {
     });
 
     var collection = new TaskCollection();
-    collection.fetch();
+    //Do not fetch data on view creating:
+    //collection.fetch();
 
     var TaskCompositeView = CompositeView.extend({});
 
