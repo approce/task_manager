@@ -2,7 +2,7 @@ var LISTS_URL      = 'https://content.googleapis.com/tasks/v1/users/@me/lists';
 var LIST_TASKS_URL = 'https://content.googleapis.com/tasks/v1/lists/{0}/tasks/';
 
 var CommonModel = Backbone.Model.extend({
-    urlRoot : LISTS_URL,
+    //urlRoot : LISTS_URL,
     defaults: {
         id   : null,
         title: ''
@@ -10,7 +10,7 @@ var CommonModel = Backbone.Model.extend({
 });
 
 var ListCollection = Backbone.Collection.extend({
-    url  : LISTS_URL,
+    //url  : LISTS_URL,
     model: CommonModel,
     parse: function (data) {
         return data.items;
@@ -45,13 +45,6 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
             var input = this.ui.input.val();
             var Model = this.model.get('childClass');
             var model = new Model({title: input});
-            model.save(model.attributes, {
-                success: function () {
-                    this.collection.add(model);
-                    this.ui.create.button('reset');
-                }.bind(this)
-            });
-            this.ui.create.button('loading');
             this.ui.input.val('');
         },
         'keyup'           : function (e) {
@@ -95,11 +88,11 @@ var getTasksView = function (listId) {
     var url = LIST_TASKS_URL.format(listId);
 
     var TaskModel = CommonModel.extend({
-        urlRoot: url
+        //urlRoot: url
     });
 
     var TaskCollection = ListCollection.extend({
-        url  : url,
+        //url  : url,
         model: TaskModel
     });
 
