@@ -1,7 +1,8 @@
 var Task = Backbone.Model.extend({
     defaults: {
         id   : null,
-        title: null
+        title: null,
+        done : false
     }
 });
 
@@ -45,11 +46,12 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
     childView         : ItemView,
     childViewContainer: '.wrap',
     ui                : {
-        input : 'input',
-        create: '#create'
+        input     : 'input',
+        create    : '#create',
+        backButton: '.back'
     },
     events            : {
-        'click @ui.create': function () {
+        'click @ui.create'    : function () {
             var input  = this.ui.input.val();
             var nextId = getNextIdentifier(this.collection);
             var Model  = this.model.get('childClass');
@@ -59,10 +61,13 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
 
             this.ui.input.val('');
         },
-        'keyup'           : function (e) {
+        'keyup'               : function (e) {
             if (e.which == 13) {
                 this.ui.create.click();
             }
+        },
+        'click @ui.backButton': function () {
+            window.location = '#';
         }
     }
 });
@@ -94,10 +99,52 @@ var getListsView = function () {
 
 var getTasksView = function (listId) {
     var taskList = taskListCollection.at(listId);
-    var title = taskList.get('title');
-    var tasks = taskList.get('tasks');
-    return new CompositeView({
+    var title    = taskList.get('title');
+    var tasks    = taskList.get('tasks');
+
+    var CustomCompositeView = CompositeView.extend({
+        childView: ItemView.extend({
+            ui: {
+                removeBtn : '.remove',
+                stateIcon : '.state-icon',
+                backButton: '.back'
+            },
+
+            events: {
+                'click'               : 'changeTaskState',
+                'click @ui.backButton': 'goBack',
+                'click @ui.removeBtn' : function (e) {
+                    e.preventDefault();
+                    this.model.collection.remove(this.model);
+                }
+            },
+
+            onRender: function () {
+                var stateIcon = this.ui.stateIcon;
+                if (this.model.get('done') == false) {
+                    stateIcon.addClass('glyphicon-unchecked');
+                } else {
+                    stateIcon.addClass('glyphicon-check');
+                }
+                this.ui.stateIcon.show();
+            },
+
+            changeTaskState: function () {
+                if (!this.isRendered) {
+                    return
+                }
+                this.model.set('done', this.model.get('done') ? false : true);
+                this.render();
+            }
+        }),
+
+        onRender: function () {
+            this.ui.backButton.show();
+        }
+    });
+
+    return new CustomCompositeView({
         collection: tasks,
-        model     : new Backbone.Model({title: title+ ':', childClass: Task})
+        model     : new Backbone.Model({title: title + ':', childClass: Task})
     });
 };
