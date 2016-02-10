@@ -93,9 +93,11 @@ var getListsView = function () {
 };
 
 var getTasksView = function (listId) {
-    var collection = taskListCollection.at(listId).get('tasks');
+    var taskList = taskListCollection.at(listId);
+    var title = taskList.get('title');
+    var tasks = taskList.get('tasks');
     return new CompositeView({
-        collection: collection,
-        model     : new Backbone.Model({title: 'Tasks:', childClass: Task})
+        collection: tasks,
+        model     : new Backbone.Model({title: title+ ':', childClass: Task})
     });
 };
