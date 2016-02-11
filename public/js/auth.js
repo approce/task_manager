@@ -1,4 +1,4 @@
-var CLIENT_ID = '433275033379-h1vbmg66vsrno3k6mp2pkcra9aju7m61.apps.googleusercontent.com';
+var CLIENT_ID = '327428769696-ua3t49lhe5k6htuki1o4dqlovav6c46f.apps.googleusercontent.com';
 
 var SCOPES = ['https://www.googleapis.com/auth/tasks'];
 
