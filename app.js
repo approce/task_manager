@@ -9,6 +9,11 @@ var routes = require('./routes/index');
 var users  = require('./routes/users');
 var signUp  = require('./routes/signUp');
 
+var mongoose     = require('mongoose');
+
+mongoose.connect('mongodb://127.0.0.1/tasks');
+
+
 var app = express();
 
 app.listen(3000);
