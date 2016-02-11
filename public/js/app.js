@@ -26,7 +26,8 @@ var initApp = function () {
         template: "#layout-template",
         regions : {
             content : "#content",
-            register: '#auth'
+            register: '#auth',
+            signIn: '#signInLayout'
         }
     });
 
@@ -43,6 +44,7 @@ var initApp = function () {
     myApp     = new MyApp();
     myApp.start();
     myApp.layout.content.show(new LoginView);
+    myApp.layout.signIn.show(new SignInView);
 };
 
 initApp();

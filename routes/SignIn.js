@@ -1,7 +1,8 @@
 var express = require('express');
 var router  = express.Router();
-var User    = require('../model/User');
-var md5     = require("../node_modules/blueimp-md5/js/md5.min");
+
+var User = require('../model/User');
+var md5  = require("../node_modules/blueimp-md5/js/md5.min");
 
 var salt = 'IAmHighlyRandomSaltValue';
 
@@ -12,18 +13,16 @@ router.post('/', function (req, res, next) {
     var password       = body.password;
     var saltedPassword = md5(password + salt);
 
-    var user = new User({
-        username: username,
-        password: saltedPassword
-    });
-
-    user.save(function (err) {
+    User.find({username: username, password: saltedPassword}, function (err, resp) {
         if (err) {
             console.log(err);
         }
+        if (resp.length > 0) {
+            res.sendStatus(20);
+        } else {
+            res.sendStatus(401);
+        }
     });
-
-    res.sendStatus(201);
 });
 
 module.exports = router;
