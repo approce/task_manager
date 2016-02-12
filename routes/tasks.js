@@ -5,6 +5,7 @@ var TaskList = require('../model/TaskList');
 
 
 router.get('/', function (req, res, next) {
+    console.log(req.session);
     console.log('4');
     console.log(req.params);
 

@@ -4,6 +4,7 @@ var favicon      = require('serve-favicon');
 var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
+var session      = require('express-session');
 
 var routes    = require('./routes/index');
 var users     = require('./routes/users');
@@ -34,6 +35,21 @@ app.use('/users', users);
 app.use('/signup', signUp);
 app.use('/signin', signIn);
 app.use('/taskLists', taskLists);
+
+
+app.use(session({
+    genid            : function (req) {
+        console.log('1');
+        return genuuid();
+    },
+    store            : new session.MemoryStore(),
+    secret           : 'If you keep ur head, when all about u r loosing theirs & blaming it on u.',
+    resave           : true,
+    saveUninitialized: false,
+    key              : 'express.sid'
+}));
+
+
 app.get('/taskLists', taskLists);
 
 // catch 404 and forward to error handler
