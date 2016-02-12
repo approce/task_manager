@@ -1,13 +1,4 @@
-var taskListCollection = new TaskListsCollection();
 
-function getNextIdentifier(collection) {
-    if (collection.length) {
-        var lastModelIdentifier = collection.at(collection.length - 1).get('id');
-        return ++lastModelIdentifier;
-    } else {
-        return 0;
-    }
-}
 
 var getListsView = function () {
     var itemView = ItemView.extend({
