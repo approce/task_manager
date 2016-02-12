@@ -8,12 +8,12 @@ var salt = 'IAmHighlyRandomSaltValue';
 router.post('/', function (req, res, next) {
     var body = req.body;
 
-    var username       = body.username;
+    var email          = body.email;
     var password       = body.password;
     var saltedPassword = md5(password + salt);
 
     var user = new User({
-        username: username,
+        email   : email,
         password: saltedPassword
     });
 

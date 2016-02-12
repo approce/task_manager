@@ -9,16 +9,17 @@ var salt = 'IAmHighlyRandomSaltValue';
 router.post('/', function (req, res, next) {
     var body = req.body;
 
-    var username       = body.username;
-    var password       = body.password;
-    var saltedPassword = md5(password + salt);
+    var credentials = {email: body.email, password: md5(body.password + salt)};
+    console.log('Credentials', credentials);
 
-    User.find({username: username, password: saltedPassword}, function (err, resp) {
+
+    User.findOne(credentials, function (err, resp) {
         if (err) {
             console.log(err);
         }
-        if (resp.length > 0) {
-            res.sendStatus(20);
+        if (resp) {
+            res.send(resp._id);
+
         } else {
             res.sendStatus(401);
         }

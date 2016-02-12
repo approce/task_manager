@@ -7,6 +7,7 @@ var initApp = function () {
     var Router = Backbone.Router.extend({
         routes: {
             "/"        : "verify",
+            "taskLists": "lists",
             "tasks/:id": "tasks",
             'signup'   : 'signUp',
             'signin'   : 'signIn'

@@ -3,16 +3,11 @@ var LoginView = Backbone.Marionette.ItemView.extend({
     ui      : {
         email   : '#email',
         password: '#password',
-        register: '#register',
-        signIn  : '#signIn'
-    },
-    events  : {
-        'click @ui.register': 'submit',
-        'click @ui.signIn'  : 'openSignInPage'
+        signUp  : '#signUp'
     },
 
-    openSignInPage: function () {
-
+    events: {
+        'click @ui.signUp': 'submit'
     },
 
     'submit': function () {
@@ -28,5 +23,8 @@ var signUp = function (email, password) {
     $.post('/signup', {
         email   : email,
         password: md5Pass
+    }).success(function (data) {
+        console.log(data);
+        window.location = '#taskLists';
     })
 };

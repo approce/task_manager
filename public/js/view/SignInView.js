@@ -11,7 +11,6 @@ var SignInView = Backbone.Marionette.ItemView.extend({
         'click @ui.signIn'  : 'signIn'
     },
     signIn  : function () {
-        console.log('sign in');
         var email    = this.ui.email.val();
         var password = this.ui.password.val();
         signIn(email, password);
@@ -26,8 +25,10 @@ var signIn = function (email, password) {
         password: md5Pass
     }).success(function (data, statusText, xhr) {
         if (xhr.status === 200) {
+            authentication  = data;
+            console.log(authentication);
             console.log('Authentication successful');
-            console.log(data);
+            window.location = '#taskLists';
         }
     }).fail(function () {
         console.log('Incorrect credentials');

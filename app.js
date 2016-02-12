@@ -5,10 +5,11 @@ var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 
-var routes = require('./routes/index');
-var users  = require('./routes/users');
-var signUp = require('./routes/signUp');
-var signIn = require('./routes/signIn');
+var routes    = require('./routes/index');
+var users     = require('./routes/users');
+var signUp    = require('./routes/signUp');
+var signIn    = require('./routes/signIn');
+var taskLists = require('./routes/tasklists');
 
 var mongoose = require('mongoose');
 
@@ -32,6 +33,8 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/signup', signUp);
 app.use('/signin', signIn);
+app.use('/taskLists', taskLists);
+app.get('/taskLists', taskLists);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

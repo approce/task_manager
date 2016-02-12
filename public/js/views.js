@@ -11,8 +11,12 @@ var TaskCollection = Backbone.Collection.extend({
 });
 
 var TaskListModel = Backbone.Model.extend({
+    urlRoot : function () {
+        return '/taskLists' + '?' + authentication;
+    },
     defaults: function () {
         return {
+            user : null,
             id   : null,
             title: null,
             tasks: new TaskCollection
@@ -21,7 +25,10 @@ var TaskListModel = Backbone.Model.extend({
 });
 
 var TaskListsCollection = Backbone.Collection.extend({
-    model: TaskListModel
+    url: function () {
+        return '/taskLists?' + authentication;
+    },
+    model  : TaskListModel
 });
 
 var taskListCollection = new TaskListsCollection();
@@ -56,7 +63,8 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
             var nextId = getNextIdentifier(this.collection);
             var Model  = this.model.get('childClass');
 
-            var model = new Model({id: nextId, title: input});
+            var model = new Model({title: input, user: authentication});
+            model.save();
             this.collection.add(model);
 
             this.ui.input.val('');
@@ -82,6 +90,8 @@ function getNextIdentifier(collection) {
 }
 
 var getListsView = function () {
+    console.log('1');
+    taskListCollection.fetch();
     var itemView = ItemView.extend({
         attributes: function () {
             return {
