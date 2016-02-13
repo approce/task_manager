@@ -54,7 +54,13 @@ var initApp = function () {
     });
     myApp     = new MyApp();
     myApp.start();
-    myApp.layout.content.show(new LoginView);
+
+    $.get('/auth/user').done(function (data) {
+        myApp.layout.content.show(getListsView());
+    }).fail(function () {
+        myApp.layout.content.show(new LoginView);
+    });
+
 };
 
 initApp();

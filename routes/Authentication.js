@@ -7,17 +7,22 @@ var md5  = require("../node_modules/blueimp-md5/js/md5.min");
 var salt = 'IAmHighlyRandomSaltValue';
 
 router.get('/user', function (req, res, next) {
-    User.find({_id: req.session.userId}, function (err, resp) {
-        if (err) {
-            console.log(err);
-        }
-        if (resp) {
-            console.log(resp);
-            res.send(resp);
-        } else {
-            res.sendStatus(401);
-        }
-    });
+    var userId = req.session.userId;
+
+    if (userId) {
+        User.find({_id: userId}, function (err, resp) {
+            if (err) {
+                console.log(err);
+            }
+            if (resp) {
+                res.send(resp);
+            }else{
+                res.sendStatus(500);
+            }
+        });
+    } else {
+        res.sendStatus(401);
+    }
 });
 
 
