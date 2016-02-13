@@ -1,24 +1,44 @@
 var express = require('express');
 var router  = express.Router();
 
-var TaskList = require('../model/TaskList');
+var Task = require('../model/Task');
 
+router.get('/:id/tasks', function (req, res, next) {
+    var taskListiId = req.params.id;
 
-router.get('/', function (req, res, next) {
-    console.log(req.session);
-    console.log('4');
-    console.log(req.params);
+    Task.find({subdomain: taskListiId}, function (err, resp) {
+        if (err) {
+            console.error(err);
+        }
+        if (resp) {
+            console.log(resp);
+            res.send(resp);
+        } else {
+            res.sendStatus(500);
+        }
+    });
 });
 
-router.post('/', function (req, res, next) {
-    var body  = req.body;
-    var title = body.title;
-    var user = '56bd14b5ca8b435e15587d83';
+router.post('/:id/tasks', function (req, res, next) {
+    var taskListId = req.params.id;
+    var title      = req.body.title;
 
-    var taskList = new TaskList({title: title, subdomain: user});
-    taskList.save();
+    var task = new Task({subdomain: taskListId, title: title});
+    task.save();
 
     res.sendStatus(201);
+});
+
+router.delete('/:id/tasks/:taskId', function (req, res) {
+    var taskId = req.params.taskId;
+    Task.remove({_id: taskId}, function (err) {
+        if (err) {
+            console.error(err);
+            res.sendStatus(500);
+        } else {
+            res.sendStatus(200);
+        }
+    });
 });
 
 

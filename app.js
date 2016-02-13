@@ -9,6 +9,7 @@ var session      = require('express-session');
 var authRouter = require('./routes/Authentication');
 var routes     = require('./routes/index');
 var taskLists  = require('./routes/tasklists');
+var task  = require('./routes/tasks');
 
 var mongoose = require('mongoose');
 
@@ -38,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/taskLists', taskLists);
+app.use('/taskLists', task);
 app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler

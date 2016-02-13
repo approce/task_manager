@@ -23,6 +23,7 @@ var initApp = function () {
             myApp.layout.content.show(getListsView());
         },
         tasks : function (id) {
+            console.log(id);
             myApp.layout.content.show(getTasksView(id));
         },
         signUp: function () {
