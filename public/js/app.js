@@ -13,6 +13,7 @@ var initApp = function () {
             'signin'   : 'signIn'
         },
         verify: function () {
+            console.log('1');
             if (authentication) {
                 this.lists();
             } else {
@@ -57,9 +58,9 @@ var initApp = function () {
     myApp.start();
 
     $.get('/auth/user').done(function (data) {
-        myApp.layout.content.show(getListsView());
+        window.location = '#taskLists';
     }).fail(function () {
-        myApp.layout.content.show(new LoginView);
+        window.location = '#signup';
     });
 
 };

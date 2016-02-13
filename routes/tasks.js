@@ -26,12 +26,26 @@ router.post('/:id/tasks', function (req, res, next) {
     var task = new Task({subdomain: taskListId, title: title});
     task.save();
 
-    res.sendStatus(201);
+    res.send(201,task);
 });
 
 router.delete('/:id/tasks/:taskId', function (req, res) {
     var taskId = req.params.taskId;
     Task.remove({_id: taskId}, function (err) {
+        if (err) {
+            console.error(err);
+            res.sendStatus(500);
+        } else {
+            res.sendStatus(200);
+        }
+    });
+});
+
+router.put('/:id/tasks/:taskId', function (req, res) {
+    var body   = req.body;
+    var taskId = req.params.taskId;
+
+    Task.update({_id: taskId}, body, {}, function (err) {
         if (err) {
             console.error(err);
             res.sendStatus(500);

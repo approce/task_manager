@@ -1,7 +1,7 @@
 var Task = Backbone.Model.extend({
     idAttribute: '_id',
 
-    defaults   : {
+    defaults: {
         _id  : null,
         title: null,
         done : false
@@ -13,6 +13,7 @@ var TaskCollection = Backbone.Collection.extend({
 });
 
 var TaskListModel = Backbone.Model.extend({
+    url        : '/taskLists',
     idAttribute: '_id',
     defaults   : function () {
         return {
@@ -22,11 +23,12 @@ var TaskListModel = Backbone.Model.extend({
         }
     },
     initialize : function () {
-        this.url = '/taskLists/' + this.get('_id');
-
-        var taskCollection = new TaskCollection;
-        taskCollection.url = this.url + '/tasks';
-        this.set('tasks', taskCollection);
+        if (this.get('_id')) {
+            this.url           = '/taskLists/' + this.get('_id');
+            var taskCollection = new TaskCollection;
+            taskCollection.url = this.url + '/tasks';
+            this.set('tasks', taskCollection);
+        }
     }
 });
 
@@ -64,7 +66,21 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
     events            : {
         'click @ui.create'    : function () {
             var input = this.ui.input.val();
-            this.collection.create({title: input});
+            if (this.model.get('list')) {
+                var taskListModel = new TaskListModel({title: input});
+                taskListModel.save({}, {
+                    success: function () {
+                        $('.list-group-item:last-child').attr('href', '/#tasks/' + taskListModel.get('_id'));
+                        taskListModel.url = '/taskLists/' + taskListModel.get('_id');
+                        var taskCollection = new TaskCollection;
+                        taskCollection.url = taskListModel.url + '/tasks';
+                        taskListModel.set('tasks', taskCollection);
+                    }
+                });
+                this.collection.add(taskListModel);
+            } else {
+                this.collection.create({title: input});
+            }
             this.ui.input.val('');
         },
         'keyup'               : function (e) {
@@ -73,7 +89,7 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
             }
         },
         'click @ui.backButton': function () {
-            window.location = '#';
+            window.location = '#taskLists';
         }
     }
 });
@@ -93,7 +109,7 @@ var getListsView = function () {
     return new CompositeView({
         collection: taskListCollection,
         childView : itemView,
-        model     : new Backbone.Model({title: 'Task lists:', childClass: TaskListModel})
+        model     : new Backbone.Model({title: 'Task lists:', childClass: TaskListModel, list: true})
     });
 };
 
@@ -135,6 +151,7 @@ var getTasksView = function (listId) {
                     return
                 }
                 this.model.set('done', this.model.get('done') ? false : true);
+                this.model.save({done: this.model.get('done')});
                 this.render();
             }
         }),

@@ -16,7 +16,7 @@ router.get('/user', function (req, res, next) {
             }
             if (resp) {
                 res.send(resp);
-            }else{
+            } else {
                 res.sendStatus(500);
             }
         });
@@ -56,15 +56,22 @@ router.post('/signup', function (req, res, next) {
         password: saltedPassword
     });
 
-    user.save(function (err, resp) {
-        if (err) {
-            console.log(err);
-            res.sendStatus(500);
+    User.find({email: email}, function (err, resp) {
+        if (resp.length > 0) {
+            res.send('Already exist');
         } else {
-            req.session.userId = resp._id
-            res.sendStatus(201);
+            user.save(function (err, resp) {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(500);
+                } else {
+                    req.session.userId = resp._id;
+                    res.sendStatus(201);
+                }
+            });
         }
     });
+
 });
 
 module.exports = router;

@@ -52,7 +52,7 @@
 </div>
 
 
-<div id="container" class="col-md-4 col-md-offset-4">
+<div id="container" class="col-md-4 col-md-offset-4" style="display: none">
     <div id="authorize-div">
         <button id="authorize-button" class="btn btn-primary" onclick="handleAuthClick(event)">
             Authorize
@@ -115,6 +115,11 @@
                                 <label for="email" class="sr-only">Email</label>
                                 <input class="form-control" placeholder="Email" id="email" name="email"
                                        autofocus="">
+                                <span id="exist" class="help-block" style="color:red; display: none">User with this
+                                    email
+                                    already
+                                    exist
+                                    .</span>
                             </div>
                             <div class="form-group">
                                 <label for="password" class="sr-only">Password</label>

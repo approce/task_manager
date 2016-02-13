@@ -24,7 +24,10 @@ var signUp = function (email, password) {
         email   : email,
         password: md5Pass
     }).success(function (data) {
-        console.log(data);
-        window.location = '#taskLists';
+        if (data == 'Already exist') {
+            $('#exist').show();
+        } else {
+            window.location = '#taskLists';
+        }
     })
 };

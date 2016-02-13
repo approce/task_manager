@@ -21,7 +21,7 @@ router.post('/', function (req, res, next) {
     var taskList = new TaskList({title: title, subdomain: userId});
     taskList.save();
 
-    res.sendStatus(201);
+    res.send(201,taskList);
 });
 
 router.delete('/:id', function (req, res) {
