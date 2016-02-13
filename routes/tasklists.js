@@ -4,6 +4,9 @@ var router  = express.Router();
 var TaskList = require('../model/TaskList');
 
 router.post('/', function (req, res, next) {
+
+    console.log(req.sessionID);
+    console.log(req.session);
     var body  = req.body;
     var title = body.title;
     var user  = body.user;
@@ -14,8 +17,13 @@ router.post('/', function (req, res, next) {
     res.sendStatus(201);
 });
 router.get('/', function (req, res, next) {
-    console.log(req);
-    res.sendStatus(200);
+    console.log(req.sessionID);
+    console.log(req.session);
+    req.session.value = 'value';
+    var user = '56bd14b5ca8b435e15587d83';
+    TaskList.find({subdomain: user}, function (err, resp) {
+        res.send(resp);
+    });
 });
 
 module.exports = router;

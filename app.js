@@ -6,16 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
-var routes    = require('./routes/index');
-var users     = require('./routes/users');
-var signUp    = require('./routes/signUp');
-var signIn    = require('./routes/signIn');
-var taskLists = require('./routes/tasklists');
+var authRouter = require('./routes/Authentication');
+var routes     = require('./routes/index');
+var taskLists  = require('./routes/tasklists');
 
 var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://127.0.0.1/tasks');
-
 
 var app = express();
 
@@ -23,34 +20,25 @@ app.listen(3000);
 app.use(express.static(__dirname + '/public'));
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', routes);
-app.use('/users', users);
-app.use('/signup', signUp);
-app.use('/signin', signIn);
-app.use('/taskLists', taskLists);
-
 
 app.use(session({
-    genid            : function (req) {
-        console.log('1');
-        return genuuid();
-    },
     store            : new session.MemoryStore(),
     secret           : 'If you keep ur head, when all about u r loosing theirs & blaming it on u.',
     resave           : true,
     saveUninitialized: false,
-    key              : 'express.sid'
+    cookie           : {maxAge: 24 * 60 * 60 * 1000}
 }));
 
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/taskLists', taskLists);
+app.use('/', routes);
+app.use('/taskLists', taskLists);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

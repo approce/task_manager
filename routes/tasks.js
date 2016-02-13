@@ -8,14 +8,14 @@ router.get('/', function (req, res, next) {
     console.log(req.session);
     console.log('4');
     console.log(req.params);
-
 });
+
 router.post('/', function (req, res, next) {
     var body  = req.body;
     var title = body.title;
-    var user  = body.user;
+    var user = '56bd14b5ca8b435e15587d83';
 
-    var taskList = new TaskList({name: title, subdomain: user});
+    var taskList = new TaskList({title: title, subdomain: user});
     taskList.save();
 
     res.sendStatus(201);

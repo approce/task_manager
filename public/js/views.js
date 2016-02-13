@@ -1,6 +1,6 @@
 var Task = Backbone.Model.extend({
     defaults: {
-        id   : null,
+        _id  : null,
         title: null,
         done : false
     }
@@ -12,12 +12,12 @@ var TaskCollection = Backbone.Collection.extend({
 
 var TaskListModel = Backbone.Model.extend({
     urlRoot : function () {
-        return '/taskLists' + '?' + authentication;
+        return '/taskLists';
     },
     defaults: function () {
         return {
             user : null,
-            id   : null,
+            _id  : null,
             title: null,
             tasks: new TaskCollection
         }
@@ -25,10 +25,14 @@ var TaskListModel = Backbone.Model.extend({
 });
 
 var TaskListsCollection = Backbone.Collection.extend({
-    url: function () {
-        return '/taskLists?' + authentication;
+    url  : function () {
+        return '/taskLists';
     },
-    model  : TaskListModel
+    parse: function (val) {
+        console.log(val);
+        return val;
+    },
+    model: TaskListModel
 });
 
 var taskListCollection = new TaskListsCollection();
@@ -90,8 +94,9 @@ function getNextIdentifier(collection) {
 }
 
 var getListsView = function () {
-    console.log('1');
-    taskListCollection.fetch();
+    taskListCollection.fetch( {success: function () {
+        console.log('5');
+    }});
     var itemView = ItemView.extend({
         attributes: function () {
             return {

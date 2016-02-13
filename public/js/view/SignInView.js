@@ -20,7 +20,7 @@ var SignInView = Backbone.Marionette.ItemView.extend({
 var signIn = function (email, password) {
     var md5Pass = md5(password);
 
-    $.post('/signIn', {
+    $.post('/auth/signin', {
         email   : email,
         password: md5Pass
     }).success(function (data, statusText, xhr) {
