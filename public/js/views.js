@@ -16,7 +16,6 @@ var TaskListModel = Backbone.Model.extend({
     },
     defaults: function () {
         return {
-            user : null,
             _id  : null,
             title: null,
             tasks: new TaskCollection
