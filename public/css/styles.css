@@ -22,3 +22,8 @@ a {
     display: none;
     margin: 15px auto
 }
+
+#footer {
+    text-align: center;
+    margin-top: 40px
+}

@@ -1,4 +1,3 @@
-
 var CompositeView = Backbone.Marionette.CompositeView.extend({
     template          : '#list-template',
     childView         : ItemView,
@@ -27,5 +26,9 @@ var CompositeView = Backbone.Marionette.CompositeView.extend({
         'click @ui.backButton': function () {
             window.location = '#';
         }
+    },
+
+    onRender: function () {
+        this.ui.backButton.hide();
     }
 });
